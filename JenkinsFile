@@ -1,0 +1,37 @@
+node 
+{
+ def mavenHome=tool name: "maven-3.9.0"
+ stage('checkout')
+  {
+    git branch: 'dev', url: 'https://github.com/shoaibb-devops/maven-webapplication-project-kkfunda.git'
+  }
+  stage('compile')
+  {
+    sh "${mavenHome}/bin/mvn compile"
+  }
+  stage('build')
+  {
+    sh "${mavenHome}/bin/mvn clean package"
+  }
+  stage('sq report')
+  {
+    sh "${mavenHome}/bin/mvn sonar:sonar"
+  }
+  stage('deploy')
+  {
+    sh "${mavenHome}/bin/mvn deploy"
+  }
+  stage('Deploy to Tomcat') 
+  {
+      
+      sh """
+
+      curl -u kk:password \
+--upload-file /var/lib/jenkins/workspace/jio-dev-pipeline/target/maven-web-application.war \
+"http://98.81.180.21:8080/manager/text/deploy?path=/maven-web-application&update=true"
+          
+        """
+   }
+
+}
+
