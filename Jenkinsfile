@@ -1,6 +1,6 @@
 node 
 {
-    //   /var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven-3.9.6
+    //   /var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven-3.9.0
    def mavenHome=tool name: "maven-3.9.0"
 echo "git branch Name: ${env.BRANCH_NAME}"
 echo "build number: ${env.BUILD_NUMBER}"
@@ -11,27 +11,24 @@ echo "build number: ${env.BUILD_NUMBER}"
       stage('git checkout')
    {
       notifyBuild('STARTED')
-     git branch: 'dev', url: 'https://github.com/kkdevopsb8/maven-webapplication-project-kkfunda.git'
+     git branch: 'dev', url: 'https://github.com/shoaibb-devops/maven-webapplication-project-kkfunda.git'
    }
    stage('compile')
    {
     sh "${mavenHome}/bin/mvn compile"
    }
-
-   stage('Build')
-   {
+stage('build')
+  {
     sh "${mavenHome}/bin/mvn clean package"
-
-   }
-   stage('SQ Report')
-   {
+  }
+  stage('sq report')
+  {
     sh "${mavenHome}/bin/mvn sonar:sonar"
-   }
-
-   stage('Deploy Into Nexus')
-   {
-    sh "${mavenHome}/bin/mvn clean deploy"
-   }
+  }
+  stage('deploy')
+  {
+    sh "${mavenHome}/bin/mvn deploy"
+  }
 
     stage('Deploy to Tomcat') 
     {
