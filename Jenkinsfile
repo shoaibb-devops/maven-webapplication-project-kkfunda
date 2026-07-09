@@ -82,6 +82,6 @@ def notifyBuild(String buildStatus = 'STARTED') {
   }
 
   // Send notifications
-  slackSend (color: colorCode, message: summary, channel: '#testing')
+  slackSend (color: colorCode, message: summary, channel: '#jenkins-notifications')
   
 }
