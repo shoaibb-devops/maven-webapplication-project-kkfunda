@@ -37,7 +37,7 @@ stage('build')
 
       curl -u kk:password \
 --upload-file /var/lib/jenkins/workspace/jio-dev-pipeline/target/maven-web-application.war \
-"http://54.167.223.65:8080/manager/text/deploy?path=/maven-web-application&update=true"
+"http://3.90.20.137:8080/manager/text/deploy?path=/maven-web-application&update=true"
           
         """
     }
