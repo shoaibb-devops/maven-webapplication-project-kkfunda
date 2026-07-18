@@ -1,0 +1,51 @@
+
+pipeline
+{
+	agent any
+	tools
+	{
+	  maven "maven-3.9.0"
+	}
+	stages
+	{
+	 stage('checkout')
+	 {
+	    steps
+	    {
+	   git branch: 'dev', url: 'https://github.com/shoaibb-devops/maven-webapplication-project-kkfunda.git'
+	   }
+	 }
+   stage('maven and sonar')
+   {
+     steps {
+          parallel (
+              "Build": {
+                   sh "mvn clean package"
+                },
+                "sonar": {
+                      sh "mvn sonar:sonar"
+                }
+              )
+            }
+          }
+                   
+	 stage('Upload to nexus and Deploy to tomcat')
+	 {
+	   steps{
+	        parallel(
+	            "deploy": {
+	                 sh "mvn deploy"
+	             },
+     					 "tomcat" : {
+     					  sh '''
+            curl -u kk:password \
+            --upload-file /var/lib/jenkins/workspace/jio-dev-pipeline/target/maven-web-application.war \
+            "http://50.16.48.205:8080/manager/text/deploy?path=/maven-web-application&update=true"
+            '''
+     			  }
+          )
+	     }
+	   }
+	} //stages  ending
+
+} //pipeline ending
